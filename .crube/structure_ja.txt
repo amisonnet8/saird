@@ -81,10 +81,21 @@ qsokufile	ビルド・テスト・lint の名前つきコマンド（qsoku）
 .goreleaser.yaml	配布物の作り方（goreleaser）
 	| タグで .github/workflows/release.yml が、手元では qsoku snapshot が使う。コマンド saird（src/main.rs）を作る。コマンドが出す版は Cargo.toml の版。.claude/rules/distribution.md を参照。
 Cargo.lock	依存の版の固定（cargo が書く。コミットする）
-Cargo.toml	パッケージの定義：名前・版・Rust の版・依存・lint の水準
+Cargo.toml	workspace の定義：crate の一覧、共通の版・Rust の版・lint の水準、crate 同士の依存
 about.hbs	配布物に入れるライセンス文のひな形（cargo-about）
 about.toml	cargo-about の設定：許すライセンスと、配布物のターゲット
 deny.toml	cargo-deny の設定：脆弱性・許すライセンス・禁止する crate・出どころ
 rust-toolchain.toml	このリポジトリの Rust のツールチェイン（stable。rustfmt・clippy つき）
-src/	Saird のツール群とコマンド saird の Rust のコード
-	lib.rs	ライブラリ。最初は qsoku check がビルドするもののためのプレースホルダー
+crates/	workspace の Rust の crate。信頼基盤の層ごとに1つ
+	saird-core/	小さく監査する層：構文解析、型と制約、式の評価器、kv の範囲と包含、検査器、封印のハッシュ、レシートなどの形式と検証器
+		Cargo.toml	saird-core のパッケージ。ほかの crate に依存せず、依存は最小にする
+		src/	saird-core のソース
+			lib.rs	saird-core のライブラリの入口。最初のモジュールまではプレースホルダー
+	saird-runtime/	広く使われる層：ホスト、標準箱（kv・clock）、テスト実行器、レシートの発行
+		Cargo.toml	saird-runtime のパッケージ。saird-core にだけ依存する
+		src/	saird-runtime のソース
+			lib.rs	saird-runtime のライブラリの入口。最初のモジュールまではプレースホルダー
+	saird/	コマンド saird と、人間に見せる表示（権限サマリ、対応表）
+		Cargo.toml	コマンド saird のパッケージ。saird-core と saird-runtime に依存する
+		src/	コマンド saird のソース
+			lib.rs	saird（表示）のライブラリの入口。コマンドを足すまではプレースホルダー

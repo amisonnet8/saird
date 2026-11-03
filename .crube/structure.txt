@@ -81,10 +81,21 @@ qsokufile	Named commands for build, test and lint (qsoku)
 .goreleaser.yaml	How the release archives are built (goreleaser)
 	| Used by .github/workflows/release.yml on a tag, and by qsoku snapshot locally. Builds the command saird (src/main.rs); the command shows Cargo.toml's version. See .claude/rules/distribution.md.
 Cargo.lock	The exact versions of the dependencies (written by cargo; committed)
-Cargo.toml	The package: its name, version, Rust version, dependencies and lint levels
+Cargo.toml	The workspace: its crates, their shared version, Rust version and lint levels, and how they depend on each other
 about.hbs	The template of the license texts in the release archives (cargo-about)
 about.toml	cargo-about settings: the accepted licenses and the targets of the release archives
 deny.toml	cargo-deny settings: vulnerabilities, allowed licenses, banned crates and sources
 rust-toolchain.toml	The Rust toolchain of this repository (stable, with rustfmt and clippy)
-src/	The Rust code of the Saird tools and the command saird
-	lib.rs	The library; a placeholder at first so that qsoku check has something to build
+crates/	The Rust crates of the workspace, one per layer of the trusted base
+	saird-core/	The small audited layer: parsing, types and constraints, the expression evaluator, kv ranges and inclusion, the checker, seal hashes, and the formats and verifier of receipts
+		Cargo.toml	Package of saird-core; no dependency on the other crates, and as few dependencies as possible
+		src/	Source of saird-core
+			lib.rs	The library root of saird-core; a placeholder until its first module
+	saird-runtime/	The widely used layer: the host, the standard boxes kv and clock, the test runner, and issuing receipts
+		Cargo.toml	Package of saird-runtime; depends on saird-core only
+		src/	Source of saird-runtime
+			lib.rs	The library root of saird-runtime; a placeholder until its first module
+	saird/	The command saird and what it shows to people (permission summary, coverage table)
+		Cargo.toml	Package of the command saird; depends on saird-core and saird-runtime
+		src/	Source of the command saird
+			lib.rs	The library root of saird (display); a placeholder until the command is added

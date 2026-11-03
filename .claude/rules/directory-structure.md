@@ -10,7 +10,7 @@
 ├── LICENSE                 （MIT）
 ├── README.md
 ├── qsokufile               ← ビルド・テストの近道（qsoku）
-├── Cargo.toml / Cargo.lock ← パッケージの定義・lint の水準（`[lints]`）／依存の版の固定
+├── Cargo.toml / Cargo.lock ← workspace の定義（crate の一覧、共通の版、crate 同士の依存、lint の水準`[workspace.lints]`）／依存の版の固定
 ├── rust-toolchain.toml     ← 使う Rust のツールチェイン（stable。rustfmt・clippy つき）
 ├── .gitattributes          （`* text=auto eol=lf`）
 ├── .gitignore
@@ -22,7 +22,7 @@
 ├── .bcuz/                  ← bcuzの記録（`history.jsonl`）。`postCreate.sh`が`bcuz --init`で作る。**コミットする**（`merge=union`）
 ├── .crube/                 ← このリポジトリのファイルの説明（crube。`structure.txt`は英語、`structure_ja.txt`は日本語、`ignore`は`.gitignore`に合わせて手で保つ）。**コミットする**
 ├── .srwr/                  ← srwrの鍵・ロック・テープ（最初のhook・MCPの呼び出しでできる。**閉じた`tapes/*.gz`だけコミットする**）
-├── crates/                 ← Rust のコード（workspace。まだ移していない。移すまでは`src/lib.rs`のプレースホルダーだけ）
+├── crates/                 ← Rust のコード（workspace の crate。各 crate は`Cargo.toml`と`src/`を持つ）
 │   ├── saird-core/         ← 小さく監査する層（構文解析、型と制約、式の評価器、範囲と包含、検査器、封印のハッシュ、レシートの形式と検証器）
 │   ├── saird-runtime/      ← 広く使われる層（ホスト、標準箱、テスト実行器）
 │   └── saird/              ← コマンド`saird`と表示（権限サマリ、対応表）
@@ -56,9 +56,10 @@
 ## 各ファイル・ディレクトリの補足
 
 - **`crates/saird/src/main.rs`**: コマンド`saird`（まだ置いていない）。引数を解いてライブラリの crate を呼ぶだけにする（処理はライブラリに置き、テストしやすくする）
-- **`tests/`**: 結合テスト（コマンドを起動するテストなど）。`env!("CARGO_BIN_EXE_<名前>")`でバイナリを起動する（`.claude/rules/testing.md`）
+- **`crates/<crate>/tests/`**: その crate の結合テスト。コマンドを起動するテストは`crates/saird/tests/`に置く（`env!("CARGO_BIN_EXE_<名前>")`が使えるのは、そのバイナリを持つ crate のテストだけ。`.claude/rules/testing.md`）
 - **`.claude/skills/mutation-check/mutants/`**: 仕様の変異（`-spec`）の道具。`go.mod`を持つ別の Go モジュールで、cargo の対象ではない。go-template と同じもの。変えたら、そのディレクトリで整形・vet・テストを通す（Skill の「気をつけること」）
-- **`src/lib.rs`**: 今は、説明のコメントだけのプレースホルダー。ビルドするものが1つも無いと`cargo`が失敗するので、空のプロジェクトでも`qsoku check`が通るように置いてある。最初のモジュールを足したら、中身に合わせて書き直す
+- **`crates/<crate>/src/lib.rs`**: 今は、その crate に何を置くかを書いた説明のコメントだけのプレースホルダー。ビルドするものが無いと`cargo`が失敗するので置いてある。最初のモジュールを足したら、中身に合わせて書き直す
+- **crate 同士の依存**: ルートの`Cargo.toml`の`[workspace.dependencies]`に path で書き、各 crate は`<名前>.workspace = true`で使う。版を書かないので、cargo-deny は`deny.toml`の`allow-wildcard-paths`で通す（公開しない crate の path の依存だけ）。lint の水準と版は`[workspace.lints]`・`[workspace.package]`に1つだけ置き、各 crate は`workspace = true`で受ける
 - **`Cargo.lock`**: コミットする（依存の版を固定し、`--locked`のビルドとリリースを再現できるようにするため）
 - **`target/`**: cargo のビルドの出力。コミットしない（`.gitignore`の`/target/`）。cargo-mutants の`mutants.out/`も同じ
 - **`.mtqg/`**: コミットされる。中のファイルは直接編集せず、すべて`mtqg`のコマンド経由で書く（`.claude/rules/mtqg-usage.md`）。`.mtqg/.local/`はコミットされない

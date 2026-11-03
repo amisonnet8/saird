@@ -1,0 +1,16 @@
+# The small audited layer of the trusted base (docs/design/trust.md): the
+# checker, the receipt verifier, and what they rest on. Keep it small and its
+# dependencies few: no Wasm runtime, no async, nothing for display. Adding a
+# dependency here is a decision for people (.claude/rules/directory-structure.md).
+[package]
+name = "saird-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+
+[lints]
+workspace = true

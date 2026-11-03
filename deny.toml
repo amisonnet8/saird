@@ -45,6 +45,10 @@ unused-allowed-license = "allow"
 # Two versions of the same crate are reported, not failed.
 multiple-versions = "warn"
 wildcards = "deny"
+# The crates of this workspace depend on each other by path, with no version
+# (they are not published: publish = false). Only such path dependencies are
+# let through; a wildcard version of any other crate still fails.
+allow-wildcard-paths = true
 
 [sources]
 # Crates only from crates.io.

@@ -19,11 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      # The command shows Cargo.toml's version (env!("CARGO_PKG_VERSION")), so
-      # it must be the tag without its "v" (.claude/rules/distribution.md).
+      # The command shows the version of the package saird
+      # (env!("CARGO_PKG_VERSION"), workspace.package in Cargo.toml), so it
+      # must be the tag without its "v" (.claude/rules/distribution.md).
       - name: Stop if Cargo.toml's version is not the tag's
         run: |
-          version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
+          version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name == "saird") | .version')
           if [ "v$version" != "$GITHUB_REF_NAME" ]; then
             echo "::error::Cargo.toml's version is $version, but the tag is $GITHUB_REF_NAME. Set version = \"${GITHUB_REF_NAME#v}\" in Cargo.toml (and Cargo.lock), commit it and tag that commit."
             exit 1

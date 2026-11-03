@@ -5,3 +5,18 @@ version = 4
 [[package]]
 name = "saird"
 version = "0.0.0"
+dependencies = [
+ "saird-core",
+ "saird-runtime",
+]
+
+[[package]]
+name = "saird-core"
+version = "0.0.0"
+
+[[package]]
+name = "saird-runtime"
+version = "0.0.0"
+dependencies = [
+ "saird-core",
+]

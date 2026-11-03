@@ -2,9 +2,9 @@
 # tag, .github/workflows/release.yml runs this, which attaches the archives to a
 # draft Release, and then publishes the Release. Locally: qsoku snapshot.
 #
-# The command is saird (src/main.rs). Until src/main.rs exists, qsoku snapshot
-# and a release fail, as there is nothing to build. goreleaser check needs a
-# git repository with a remote.
+# The command is saird (crates/saird/src/main.rs). Until that file exists,
+# qsoku snapshot and a release fail, as there is nothing to build. goreleaser
+# check needs a git repository with a remote.
 version: 2
 
 project_name: saird
@@ -34,6 +34,9 @@ builds:
     flags:
       - --release
       - --locked
+      # The root is a workspace: goreleaser refuses to build without the
+      # package, and takes the binary from the root's target/.
+      - --package=saird
 
 archives:
   - formats: [tar.gz]

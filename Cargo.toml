@@ -1,7 +1,20 @@
-[package]
-name = "saird"
+# One crate per layer of the trusted base (docs/design/trust.md), so that the
+# compiler and the manifests enforce which way the crates depend on each other
+# and what goes into the small audited layer
+# (.claude/rules/directory-structure.md):
+#   saird-core     the small audited layer (checker, receipt verifier)
+#   saird-runtime  the widely used layer (host, standard boxes, test runner)
+#   saird          the command saird and what it shows to people
+# Dependencies go saird -> saird-runtime -> saird-core only.
+[workspace]
+members = ["crates/*"]
+resolver = "3"
+
+# Shared by every crate (each says "x.workspace = true").
+[workspace.package]
 # The released version: the tag without its "v" (v0.1.0 -> 0.1.0). release.yml
-# stops when the two differ (.claude/rules/distribution.md).
+# stops when the version of the package saird differs from the tag
+# (.claude/rules/distribution.md).
 version = "0.0.0"
 edition = "2024"
 # The oldest Rust this project builds with. rust-toolchain.toml picks the
@@ -10,15 +23,18 @@ rust-version = "1.99"
 license = "MIT"
 publish = false
 
-[dependencies]
+[workspace.dependencies]
+saird-core = { path = "crates/saird-core" }
+saird-runtime = { path = "crates/saird-runtime" }
 
-# Lints for every target (qsoku lint runs clippy with -D warnings, so a warning
-# fails the check). Change a level here, not with #[allow] spread over the code;
-# an #[allow] that is needed says why (clippy::allow_attributes_without_reason).
-[lints.rust]
+# Lints for every target of every crate (qsoku lint runs clippy with
+# -D warnings, so a warning fails the check). Change a level here, not with
+# #[allow] spread over the code; an #[allow] that is needed says why
+# (clippy::allow_attributes_without_reason).
+[workspace.lints.rust]
 unsafe_code = "forbid"
 
-[lints.clippy]
+[workspace.lints.clippy]
 allow_attributes_without_reason = "warn"
 dbg_macro = "warn"
 todo = "warn"

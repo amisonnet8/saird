@@ -1,0 +1,16 @@
+# The widely used layer of the trusted base (docs/design/trust.md): the host,
+# the standard boxes and the test runner. It may depend on saird-core, never
+# the other way round.
+[package]
+name = "saird-runtime"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+saird-core.workspace = true
+
+[lints]
+workspace = true

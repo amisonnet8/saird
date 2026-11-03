@@ -1,0 +1,17 @@
+# The command saird and what it shows to people (the permission summary, the
+# coverage table, differences). It parses arguments and calls the other
+# crates; it holds no checking of its own.
+[package]
+name = "saird"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+saird-core.workspace = true
+saird-runtime.workspace = true
+
+[lints]
+workspace = true
