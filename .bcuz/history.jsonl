@@ -134,3 +134,15 @@
 {"v":1,"ts":"2026-11-03T09:01:20.888Z","why":"パーサのコミットの前に、日本語の説明の漏れを確かめる","cmd":["env","CRUBE_LANG=ja","crube","status","--require","all"],"dir":".","exit":0,"ms":5}
 {"v":1,"ts":"2026-11-03T09:01:24.725Z","why":"パーサのコミットに入れるため、テープを閉じて圧縮する","cmd":["srwr","tapes","new"],"dir":".","exit":0,"ms":22}
 {"v":1,"ts":"2026-11-03T09:01:24.928Z","why":"パーサのコミットに入るものを確かめる","cmd":["git","status","--short","--untracked-files=all"],"dir":".","exit":0,"ms":4}
+{"v":1,"ts":"2026-11-03T09:01:27.258Z","why":"パーサの変更・説明・記録・テープをコミット対象にする","cmd":["git","add",".bcuz/history.jsonl",".mtqg/journal.jsonl",".srwr/tapes",".crube","crates/saird-core/src"],"dir":".","exit":0,"ms":12}
+{"v":1,"ts":"2026-11-03T11:05:57.485Z","why":"人間の回答を読んで反映するため","cmd":["mtqg","q","list","--all"],"dir":".","exit":0,"ms":3}
+{"v":1,"ts":"2026-11-03T11:06:12.196Z","why":"回答で決着した質問を閉じ、検査器で断るものを [1-4] の todo に足すため","cmd":["sh","-c","mtqg q done 3d0c74fcb7 && mtqg q done 0a335587f9 && mtqg q done 47a4432f06 && mtqg edit 82521e4fb1 \"[1-4] 契約の静的検査（検査器）：上限の無い値の拒否（int・timestamp は下限と上限、string は len か matches、list は len）、errors の when の参照、atomic を宣言できる条件（外部への書き込み権限を持たない）、入力と出力のフィールド名の重なり、予約語のフィールド名（qa 0a335587f9）、例テストの kv の同じキー（qa 47a4432f06）、MVP の kv 範囲は箱ごとに1つ\" && mtqg t add \"[1-2b] needs: と errors: を省けるようにする（qa 3d0c74fcb7）：syntax.md の EBNF と規則、予約語の一覧と kv の同じキーの規則（qa 0a335587f9・47a4432f06）を足し、パーサを合わせる\""],"dir":".","exit":0,"ms":18}
+{"v":1,"ts":"2026-11-03T11:07:12.705Z","why":"テストを足したあと、rustfmt の形に整えるため","cmd":["qsoku","fmt"],"dir":".","exit":0,"ms":75}
+{"v":1,"ts":"2026-11-03T11:07:12.931Z","why":"needs と errors を省けるようにしたあと、全体が通るか確かめるため","cmd":["qsoku","check"],"dir":".","exit":0,"ms":622}
+{"v":1,"ts":"2026-11-03T11:07:17.485Z","why":"省ける節の判定をテストが守っているかを、変えた関数だけに絞って軽く確かめるため","cmd":["env","CARGO_BUILD_JOBS=1","RUST_TEST_THREADS=1","nice","-n","19","cargo","mutants","--jobs","1","--gitignore","true","--file","crates/saird-core/src/syntax/parser.rs","--re","in parse_contract|in output"],"dir":".","exit":0,"ms":3120}
+{"v":1,"ts":"2026-11-03T11:07:27.219Z","why":"[1-2b] が終わったので todo を閉じ、決めたことを残すため","cmd":["sh","-c","mtqg t done 8ea425b371 && mtqg m add \"[1-2b] needs: と errors: を省けるようにした（syntax.md の EBNF を [ ] にし、「省ける節」を足した。ensures: は必須のまま）。予約語の一覧と、例テストの kv の同じキーを書けないことも syntax.md に足した（断るのは検査器 [1-4]）。パーサは needs が無ければ空、errors が無ければ空として読み、needs も tests も無いときは expected needs: or tests: と言う。変えた関数の cargo mutants は6件すべて caught\""],"dir":".","exit":0,"ms":7}
+{"v":1,"ts":"2026-11-03T11:07:27.359Z","why":"省ける節のコミットの前に、テープに無い変更が無いか確かめる","cmd":["srwr","tapes","check"],"dir":".","exit":0,"ms":8}
+{"v":1,"ts":"2026-11-03T11:07:27.509Z","why":"省ける節のコミットの前に、英語の説明の漏れを確かめる","cmd":["crube","status","--require","all"],"dir":".","exit":0,"ms":3}
+{"v":1,"ts":"2026-11-03T11:07:27.655Z","why":"省ける節のコミットの前に、日本語の説明の漏れを確かめる","cmd":["env","CRUBE_LANG=ja","crube","status","--require","all"],"dir":".","exit":0,"ms":4}
+{"v":1,"ts":"2026-11-03T11:07:31.087Z","why":"省ける節のコミットに入れるため、テープを閉じて圧縮する","cmd":["srwr","tapes","new"],"dir":".","exit":0,"ms":17}
+{"v":1,"ts":"2026-11-03T11:07:31.240Z","why":"省ける節のコミットに入るものを確かめる","cmd":["git","status","--short","--untracked-files=all"],"dir":".","exit":0,"ms":3}

@@ -49,11 +49,23 @@ pub fn parse_contract(source: &str) -> Result<Contract, SyntaxError> {
         .map(|line| whole(line, field))
         .collect::<Result<_, _>>()?;
     let output = output(next_line(&mut rest, eof, END, "'out:'")?)?;
-    let needs = section(next_line(&mut rest, eof, END, "'needs:'")?, "needs")?
-        .iter()
-        .map(|line| whole(line, need))
-        .collect::<Result<_, _>>()?;
-    let tests = section(next_line(&mut rest, eof, END, "'tests:'")?, "tests")?
+    // needs: may be left out: a box with no permission (pure computation).
+    let needs = match rest.as_slice().first() {
+        Some(line) if starts_with(line, "needs") => {
+            rest.next();
+            section(line, "needs")?
+                .iter()
+                .map(|line| whole(line, need))
+                .collect::<Result<_, _>>()?
+        }
+        _ => Vec::new(),
+    };
+    let expected = if needs.is_empty() {
+        "'needs:' or 'tests:'"
+    } else {
+        "'tests:'"
+    };
+    let tests = section(next_line(&mut rest, eof, END, expected)?, "tests")?
         .iter()
         .map(test)
         .collect::<Result<_, _>>()?;
@@ -377,13 +389,15 @@ fn output(line: &Line) -> Result<Output, SyntaxError> {
     .iter()
     .map(|line| whole(line, expr))
     .collect::<Result<_, _>>()?;
-    let errors = section(
-        next_line(&mut rest, line.end, nothing, "'errors:'")?,
-        "errors",
-    )?
-    .iter()
-    .map(|line| whole(line, error_decl))
-    .collect::<Result<_, _>>()?;
+    // errors: may be left out: a box that declares no error.
+    let errors = match rest.next() {
+        Some(errors) if starts_with(errors, "errors") => section(errors, "errors")?
+            .iter()
+            .map(|line| whole(line, error_decl))
+            .collect::<Result<_, _>>()?,
+        Some(extra) => return Err(Cursor::new(extra).unexpected("'errors:'")),
+        None => Vec::new(),
+    };
     if let Some(extra) = rest.next() {
         return Err(SyntaxError::new(
             extra.span,
@@ -1343,6 +1357,28 @@ tests:
     }
 
     #[test]
+    fn needs_and_errors_may_be_left_out() {
+        let source = SMALL
+            .replace("  errors:\n    TooBig { limit: 15 } when a + b > 15\n", "")
+            .replace("needs:\n  clock read\n", "");
+        let c = contract(&source);
+        assert!(c.output.errors.is_empty(), "{:?}", c.output.errors);
+        assert!(c.needs.is_empty(), "{:?}", c.needs);
+        let ensures: Vec<String> = c.output.ensures.iter().map(sx).collect();
+        assert_eq!(ensures, ["(cmp sum == (+ a b))"]);
+        assert_eq!(c.tests.len(), 1);
+
+        let no_tests = source.replace(
+            "tests:\n  example \"small\":\n    input { a: 1, b: 2 }\n    expect ok { sum: 3 }\n",
+            "",
+        );
+        assert_eq!(
+            refused(&no_tests),
+            "line 10, column 1: expected 'needs:' or 'tests:', found the end of the input"
+        );
+    }
+
+    #[test]
     fn positions() {
         let c = contract(SMALL);
         let spans: Vec<Span> = c.inputs.iter().map(|f| f.span).collect();
@@ -1537,9 +1573,19 @@ tests:
         }
         let replaced = [
             (
-                "needs:\n  clock read\n",
+                "  ensures:\n    sum == a + b\n",
                 "",
-                "line 12, column 1: expected 'needs', found 'tests'",
+                "line 8, column 3: expected 'ensures', found 'errors'",
+            ),
+            (
+                "  errors:\n",
+                "  error:\n",
+                "line 10, column 3: expected 'errors:', found 'error'",
+            ),
+            (
+                "tests:\n",
+                "test:\n",
+                "line 14, column 1: expected 'tests', found 'test'",
             ),
             (
                 "  a: int where",

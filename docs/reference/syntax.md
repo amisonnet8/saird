@@ -19,7 +19,7 @@ EBNF で書く。`BLOCK{ x }` は、`:` で終わる行のあとに、1段深く
 
 ```ebnf
 contract    = "box" NAME VERSION NL "summary" ":" TEXT NL
-              in_sec out_sec needs_sec tests_sec ;
+              in_sec out_sec [ needs_sec ] tests_sec ;
 
 in_sec      = "in" ":" BLOCK{ field NL } ;
 field       = IDENT ":" type [ "where" constraints ] ;
@@ -28,7 +28,7 @@ type        = "int" | "string" | "bool" | "timestamp"
             | "{" field { "," field } "}" ;
 constraints = expr { "," expr } ;
 
-out_sec     = "out" ":" BLOCK{ ok_decl ensures_sec errors_sec } ;
+out_sec     = "out" ":" BLOCK{ ok_decl ensures_sec [ errors_sec ] } ;
 ok_decl     = "ok" ":" type NL ;
 ensures_sec = "ensures" ":" BLOCK{ expr NL } ;
 errors_sec  = "errors" ":" BLOCK{ error_decl NL } ;
@@ -107,6 +107,12 @@ value       = INT | STRING | "true" | "false"
 | `METHOD` | HTTP のメソッド名(`GET`・`POST` など) |
 | `TEXT` | `:` のあとから行末まで |
 
+次の語は予約語とする。式の中で `path` を始められず、フィールド名にも使えない(検査器が拒否する)。
+
+```
+and any each false in kv_after kv_before len matches not or true unique
+```
+
 ## 規則
 
 ### 型と値
@@ -115,6 +121,12 @@ value       = INT | STRING | "true" | "false"
 - `timestamp` の値は、RFC 3339 の `Z` 付きの文字列で書く(`"2026-11-01T10:00:00Z"`)。
 - `timestamp` に `DURATION` を足し引きした結果は `timestamp` とする。
 - 入力と出力のフィールドに、同じ名前を使えない(検査器が拒否する)。
+
+### 省ける節
+
+- `needs:` を省いたときは、権限を何も持たない(純粋計算の箱)。
+- `errors:` を省いたときは、宣言したエラーが無い。
+- `ensures:` は省けない。
 
 ### 制約(`where`)
 
@@ -160,7 +172,7 @@ value       = INT | STRING | "true" | "false"
 ### kv
 
 - `kv_before[a]`・`kv_after[a]` の添字の数は、kv の範囲のテンプレートの変数の数と同じにする。添字は、変数の順に当てはめる。
-- 例テストの `kv = { ... }` のキーは、テンプレートの変数の値とする(範囲が `"inventory/{sku}"` なら、`A1` はキー `inventory/A1`)。
+- 例テストの `kv = { ... }` のキーは、テンプレートの変数の値とする(範囲が `"inventory/{sku}"` なら、`A1` はキー `inventory/A1`)。同じキーを2回書けない(検査器が拒否する)。
 
 ### 例テスト
 
