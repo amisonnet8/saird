@@ -42,6 +42,8 @@ pub enum Type {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Output {
     pub ok: Type,
+    /// The `ok:` line.
+    pub ok_span: Span,
     pub ensures: Vec<Expr>,
     /// In the order written: the first whose `when` holds is the one returned.
     pub errors: Vec<ErrorDecl>,

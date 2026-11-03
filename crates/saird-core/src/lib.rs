@@ -8,3 +8,4 @@
 //! It depends on no other crate of this workspace.
 
 pub mod syntax;
+pub mod types;

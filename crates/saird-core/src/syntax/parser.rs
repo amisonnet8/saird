@@ -377,7 +377,8 @@ fn output(line: &Line) -> Result<Output, SyntaxError> {
     let children = section(line, "out")?;
     let mut rest = children.iter();
     let nothing = "the end of 'out:'";
-    let ok = whole(next_line(&mut rest, line.end, nothing, "'ok:'")?, |c| {
+    let ok_line = next_line(&mut rest, line.end, nothing, "'ok:'")?;
+    let ok = whole(ok_line, |c| {
         c.keyword("ok")?;
         c.expect(&Tok::Colon, "':'")?;
         ty(c)
@@ -406,6 +407,7 @@ fn output(line: &Line) -> Result<Output, SyntaxError> {
     }
     Ok(Output {
         ok,
+        ok_span: ok_line.span,
         ensures,
         errors,
     })

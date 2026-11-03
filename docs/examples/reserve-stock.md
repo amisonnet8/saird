@@ -42,3 +42,34 @@ tests:
 ```
 
 失敗時に在庫が変わらないこと、二重に引き当てないこと、期限切れの在庫を戻すことは、この箱の `ensures` には含めない。最初の2つは effects としてホストが保証し、最後の1つは別の箱が担う。
+
+この契約の WIT の骨格は、次のとおりである([契約](../reference/contract.md)「WIT との対応」)。
+
+```wit
+package saird-box:reserve-stock@1.0.0;
+
+world reserve-stock {
+  record timestamp {
+    seconds: s64,
+    nanoseconds: u32,
+  }
+  record in-items {
+    sku: string,
+    qty: s64,
+  }
+  record out-ok {
+    reserved-until: timestamp,
+  }
+  record error-unknown-sku {
+    sku: string,
+  }
+  record error-out-of-stock {
+    sku: string,
+  }
+  variant error {
+    unknown-sku(error-unknown-sku),
+    out-of-stock(error-out-of-stock),
+  }
+  export call: func(order-id: string, items: list<in-items>) -> result<out-ok, error>;
+}
+```

@@ -97,6 +97,10 @@ crates/	workspace の Rust の crate。信頼基盤の層ごとに1つ
 				error.rs	ソースの中の位置と、行・列つきの構文の誤り
 				lexer.rs	字下げ、続きの行、ブロック、字句
 				parser.rs	契約と式のパーサとそのテスト（docs の ReserveStock の例を含む）
+			types/	契約の値の型と、箱の WIT の骨格
+				mod.rs	Ty（値と式の型）、TypeError、式に型を付ける Scope
+				wit.rs	contract_wit：契約の WIT のパッケージ・world・関数 call
+				timestamp.rs	Timestamp：UTC のエポックからの秒とナノ秒。RFC 3339 の Z つきで読み書きする
 	saird-runtime/	広く使われる層：ホスト、標準箱（kv・clock）、テスト実行器、レシートの発行
 		Cargo.toml	saird-runtime のパッケージ。saird-core にだけ依存する
 		src/	saird-runtime のソース

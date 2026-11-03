@@ -97,6 +97,10 @@ crates/	The Rust crates of the workspace, one per layer of the trusted base
 				error.rs	Positions in a source, and the syntax error with line and column
 				lexer.rs	Indentation, continued lines, blocks and tokens
 				parser.rs	The parser of contracts and expressions, with its tests (including the ReserveStock example of the docs)
+			types/	Types of contract values and the WIT skeleton of a box
+				mod.rs	Ty (the type of a value or expression), TypeError, and Scope, which types expressions
+				wit.rs	contract_wit: the WIT package, world and call function of a contract
+				timestamp.rs	Timestamp: seconds and nanoseconds since the epoch in UTC, read and written as RFC 3339 with Z
 	saird-runtime/	The widely used layer: the host, the standard boxes kv and clock, the test runner, and issuing receipts
 		Cargo.toml	Package of saird-runtime; depends on saird-core only
 		src/	Source of saird-runtime
