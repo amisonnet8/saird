@@ -27,6 +27,7 @@ bcuz "<作業>のコミットの前に、テープに無い変更が無いか確
 | 出たもの | 判断 |
 |---|---|
 | `Cargo.lock`（`cargo`が書いた）・`Cargo.toml`（`cargo add`が書いた） | 生成物なので、そのままでよい |
+| `.crube/structure.txt`・`.crube/structure_ja.txt`（crube の CLI・MCP が書いた） | crube が書くものは理由なしでよい（`.claude/rules/crube-usage.md`「落とし穴」）。そのままでよい |
 | `D`（`bcuz "…" git rm`で消した） | srwrに削除の道具が無いため。そのままでよい。消した理由をコミットメッセージに書く |
 | 手で書いたファイル（Bashで書き換えた、など） | 止まって、人間に理由を伝える（`.claude/rules/srwr-usage.md`） |
 | 生成物で、毎回出るもの | `.srwrignore`に足すかを判断する |

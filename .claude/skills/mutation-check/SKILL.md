@@ -50,7 +50,7 @@ Bashのコマンドは、すべて`bcuz "理由" …`で1つずつ打つ（`.cla
 3. **①構文の変異を、cargo-mutants で回す。** 変えたファイルだけに絞ってよい（`--file`）。全部回すときは引数なし
 
    ```
-   bcuz "構文の変異を、テストが捕まえるか確かめる" cargo mutants --file src/<変えたファイル>.rs
+   bcuz "構文の変異を、テストが捕まえるか確かめる" cargo mutants --file crates/<crate>/src/<変えたファイル>.rs
    ```
 
    - 写しは cargo-mutants が`$TMPDIR`に作るので、手順1の写しは要らない。結果は作業ディレクトリの`mutants.out/`に書く（`.gitignore`・`.crube/ignore`済み。srwrのテープには載らない）

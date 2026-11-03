@@ -97,3 +97,9 @@
 {"v":1,"ts":"2026-11-03T08:29:16.236Z","why":"workspace への移行のコミットの前に、テープに無い変更が無いか確かめる","cmd":["srwr","tapes","check"],"dir":".","exit":1,"ms":9}
 {"v":1,"ts":"2026-11-03T08:29:20.672Z","why":"workspace への移行のコミットに入れるため、テープを閉じて圧縮する","cmd":["srwr","tapes","new"],"dir":".","exit":0,"ms":13}
 {"v":1,"ts":"2026-11-03T08:29:20.872Z","why":"workspace への移行のコミットに入るものを確かめる","cmd":["git","status","--short","--untracked-files=all"],"dir":".","exit":0,"ms":3}
+{"v":1,"ts":"2026-11-03T08:29:23.267Z","why":"workspace への移行の変更・記録・テープをコミット対象にする","cmd":["git","add",".bcuz/history.jsonl",".mtqg/journal.jsonl",".srwr/tapes",".crube",".claude/rules/directory-structure.md",".claude/rules/distribution.md",".github/workflows/release.yml",".goreleaser.yaml","Cargo.lock","Cargo.toml","deny.toml","crates"],"dir":".","exit":0,"ms":10}
+{"v":1,"ts":"2026-11-03T08:39:01.836Z","why":"Skill の修正のコミットの前に、テープに無い変更が無いか確かめる","cmd":["srwr","tapes","check"],"dir":".","exit":0,"ms":5}
+{"v":1,"ts":"2026-11-03T08:39:01.976Z","why":"Skill の修正のコミットの前に、英語の説明の漏れを確かめる","cmd":["crube","status","--require","all"],"dir":".","exit":0,"ms":3}
+{"v":1,"ts":"2026-11-03T08:39:02.115Z","why":"Skill の修正のコミットの前に、日本語の説明の漏れを確かめる","cmd":["env","CRUBE_LANG=ja","crube","status","--require","all"],"dir":".","exit":0,"ms":3}
+{"v":1,"ts":"2026-11-03T08:39:05.034Z","why":"Skill の修正のコミットに入れるため、テープを閉じて圧縮する","cmd":["srwr","tapes","new"],"dir":".","exit":0,"ms":11}
+{"v":1,"ts":"2026-11-03T08:39:05.177Z","why":"Skill の修正のコミットに入るものを確かめる","cmd":["git","status","--short","--untracked-files=all"],"dir":".","exit":0,"ms":2}
