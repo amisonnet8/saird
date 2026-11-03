@@ -91,6 +91,12 @@ crates/	workspace の Rust の crate。信頼基盤の層ごとに1つ
 		Cargo.toml	saird-core のパッケージ。ほかの crate に依存せず、依存は最小にする
 		src/	saird-core のソース
 			lib.rs	saird-core のライブラリの入口。最初のモジュールまではプレースホルダー
+			syntax/	契約を構文木にする（docs/reference/syntax.md）。ここでは文法だけを確かめる
+				mod.rs	syntax の入口：parse_contract、構文木、位置、エラー
+				ast.rs	契約の構文木（位置つき）
+				error.rs	ソースの中の位置と、行・列つきの構文の誤り
+				lexer.rs	字下げ、続きの行、ブロック、字句
+				parser.rs	契約と式のパーサとそのテスト（docs の ReserveStock の例を含む）
 	saird-runtime/	広く使われる層：ホスト、標準箱（kv・clock）、テスト実行器、レシートの発行
 		Cargo.toml	saird-runtime のパッケージ。saird-core にだけ依存する
 		src/	saird-runtime のソース

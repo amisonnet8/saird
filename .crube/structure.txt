@@ -91,6 +91,12 @@ crates/	The Rust crates of the workspace, one per layer of the trusted base
 		Cargo.toml	Package of saird-core; no dependency on the other crates, and as few dependencies as possible
 		src/	Source of saird-core
 			lib.rs	The library root of saird-core; a placeholder until its first module
+			syntax/	Reading contracts into a syntax tree (docs/reference/syntax.md); only the grammar is checked here
+				mod.rs	The entry of syntax: parse_contract, the syntax tree, positions and errors
+				ast.rs	The syntax tree of contracts, with positions
+				error.rs	Positions in a source, and the syntax error with line and column
+				lexer.rs	Indentation, continued lines, blocks and tokens
+				parser.rs	The parser of contracts and expressions, with its tests (including the ReserveStock example of the docs)
 	saird-runtime/	The widely used layer: the host, the standard boxes kv and clock, the test runner, and issuing receipts
 		Cargo.toml	Package of saird-runtime; depends on saird-core only
 		src/	Source of saird-runtime

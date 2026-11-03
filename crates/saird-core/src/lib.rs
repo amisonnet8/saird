@@ -5,5 +5,6 @@
 //! the static checker, the hashes of sealed artifacts, and the formats and
 //! verifier of receipts, contract approvals and conformance certificates.
 //!
-//! It depends on no other crate of this workspace. A placeholder until the
-//! first module.
+//! It depends on no other crate of this workspace.
+
+pub mod syntax;
