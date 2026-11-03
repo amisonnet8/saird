@@ -11,7 +11,7 @@ Saird は AI 専用プログラミング言語。仕様を作りながら、そ�
   - `reference/`：文法、契約、effects、生成テスト、権限、組立書、エラー、用語集
   - `examples/`：ReserveStock、Checkout、呼び出し
 - Saird は**記述形式**（契約と組立書を書くための形式）と**ツール群**（それらを検査し、実行するもの）でできている。このリポジトリの Rust のコードはツール群。箱の実装は任意の言語で書き、Wasm にコンパイルする。この2つを混同しない
-- Cargo のパッケージは`saird`1つで、実行ファイルも`saird`。workspace に分けるかは、MVP の実装で要るときに人間が決める
+- Cargo は workspace にし、信頼基盤の層に合わせて crate を分ける：`saird-core`（小さく監査する層）、`saird-runtime`（広く使われる層）、`saird`（コマンドと表示。実行ファイルも`saird`）。置き場所の判断基準は`.claude/rules/directory-structure.md`
 - 経緯と実装の判断は mtqg に書く（`docs/`には経緯を書かない。`.claude/rules/documentation.md`）
 
 ## 最初に作る範囲
