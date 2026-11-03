@@ -69,6 +69,7 @@ docs/	Saird の仕様
 		generated-tests.md	生成テスト：入力、状態、判定、最低成立件数、seed
 		glossary.md	用語集
 		permissions.md	権限：kv、http、包含の規則、秘密情報
+		syntax.md	契約と組立書の文法（EBNF）、行と字下げ、文法だけでは決まらない規則
 .gitattributes	改行（すべて LF）と、記録のファイルの merge=union
 .gitignore	git に入れないもの。ルート直下のドットで始まる名前は許可リスト方式
 .mcp.json	Claude Code に mtqg・srwr と、crube（英語・日本語）の MCP サーバーをつなぐ設定

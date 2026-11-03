@@ -25,7 +25,7 @@
 ├── src/                    ← Rust のコード（`lib.rs`がライブラリ、コマンドは`main.rs`か`bin/`）
 ├── docs/                   ← Saird の仕様（`.claude/rules/documentation.md`）
 │   ├── design/             ← 考え方、信頼モデル、ビルドと実行、粒度、入れないもの、弱点、再利用
-│   ├── reference/          ← 契約、effects、生成テスト、権限、組立書、エラー、用語集
+│   ├── reference/          ← 文法、契約、effects、生成テスト、権限、組立書、エラー、用語集
 │   └── examples/           ← ReserveStock、Checkout、呼び出し
 ├── .devcontainer/          ← 開発環境（devcontainer.json、postCreate.sh）
 ├── .claude/                ← rules/（ルール）、skills/（commit-with-tape：テープを閉じてコミットする手順。mutation-check：壊して確かめる手順と、仕様の変異の道具`mutants/`（別の Go モジュール）・仕様の変異の一覧`spec.txt`）、hooks/（build.sh、require-bcuz.sh とそのテスト、crube-untracked.sh：srwr の new のあとに未説明を知らせる）、settings.json（人間が管理する）

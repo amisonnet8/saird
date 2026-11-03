@@ -69,6 +69,7 @@ docs/	The Saird specification
 		generated-tests.md	Generated tests: inputs, state, verdicts, minimum hits, seed
 		glossary.md	Terms
 		permissions.md	Permissions: kv, http, the inclusion rule and secrets
+		syntax.md	Grammar of contracts and assemblies (EBNF), lines and indentation, and the rules that the grammar alone does not fix
 .gitattributes	Line endings (LF everywhere) and merge=union for the record files
 .gitignore	Files kept out of git; dot entries in the root are an allowlist
 .mcp.json	MCP servers for Claude Code: mtqg, srwr, and crube in English and Japanese

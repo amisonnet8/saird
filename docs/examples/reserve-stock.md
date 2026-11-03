@@ -13,12 +13,12 @@ in:
 out:
   ok: { reserved_until: timestamp }
   ensures:
-    each item: item.sku in kv_before
-    each item: kv_after[item.sku] == kv_before[item.sku] - item.qty
+    each item in items: item.sku in kv_before
+    each item in items: kv_after[item.sku] == kv_before[item.sku] - item.qty
     reserved_until == clock + 15min
   errors:                                # 契約のエラー選択規則に従う
-    UnknownSku { sku }  when any item: item.sku not in kv_before
-    OutOfStock { sku }  when any item: item.qty > kv_before[item.sku]
+    UnknownSku { sku }  when any item in items: item.sku not in kv_before
+    OutOfStock { sku }  when any item in items: item.qty > kv_before[item.sku]
 
 needs:
   kv "inventory/{sku}": int where 0 <= v <= 100000   read-write

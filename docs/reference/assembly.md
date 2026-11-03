@@ -6,7 +6,7 @@
 - 各箱には、必要な権限だけを渡す。
 - 依存部品はハッシュで固定する。部品が変わったら、依存する箱の適合証明を取り直す。
 
-例は [Checkout](../examples/checkout.md)。
+書き方は [文法](syntax.md)、例は [Checkout](../examples/checkout.md)。
 
 ## 呼び出し
 
