@@ -1,0 +1,48 @@
+# Paths that crube leaves out of ls, tree, find and status.
+# The format is that of .gitignore, but .gitignore itself is not read.
+# .crube/ is always left out.
+.git/
+.hg/
+.svn/
+node_modules/
+
+# What this repository does not commit, following .gitignore by hand (crube
+# does not read it): when .gitignore changes, change this file too.
+
+# Build artifacts.
+/bin/
+/dist/
+/target/
+/mutants.out/
+/mutants.out.old/
+
+# Dot entries in the root (and in .claude/): leave out all of them, then take
+# back only what is committed. This also leaves out the dummy files that the
+# Bash sandbox puts in the working directory (.claude/rules/testing.md).
+/.*
+!/.gitignore
+!/.gitattributes
+!/.srwrignore
+!/.goreleaser.yaml
+!/.mcp.json
+!/.devcontainer/
+!/.github/
+!/.mtqg/
+!/.bcuz/
+!/.claude/
+/.claude/*
+!/.claude/settings.json
+!/.claude/rules/
+!/.claude/skills/
+!/.claude/hooks/
+# srwr: only the closed tapes are committed (never the key).
+!/.srwr/
+/.srwr/*
+!/.srwr/tapes/
+/.srwr/tapes/*.tape.jsonl
+# The closed tapes are committed, but they are not described one by one: a
+# pattern entry for them would be an orphan until the first tape is closed,
+# and each new tape would be untracked without one.
+/.srwr/tapes/*.tape.jsonl.gz
+# mtqg: .local/ is not committed.
+/.mtqg/.local/

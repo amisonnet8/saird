@@ -1,0 +1,27 @@
+# cargo-about configuration: the license texts of the crates built into the
+# command, for the release archives (.goreleaser.yaml runs
+# "cargo about generate about.hbs", .claude/rules/distribution.md). A crate
+# whose license is not accepted here fails the generation, and so the release.
+# Keep this list the same as deny.toml's [licenses] allow.
+accepted = [
+  "MIT",
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Unicode-3.0",
+  "Zlib",
+]
+# The targets of the release archives, as in deny.toml.
+targets = [
+  "x86_64-unknown-linux-musl",
+  "aarch64-unknown-linux-musl",
+  "x86_64-apple-darwin",
+  "aarch64-apple-darwin",
+  "x86_64-pc-windows-gnu",
+  "aarch64-pc-windows-gnullvm",
+]
+# Not the dev-dependencies: they are not in the command.
+ignore-dev-dependencies = true
+ignore-build-dependencies = false

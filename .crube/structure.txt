@@ -1,0 +1,89 @@
+.bcuz/	Record of the commands run through bcuz (committed)
+	history.jsonl	One JSON line per command: when, why, what and the exit code
+.claude/	Claude Code settings shared in the repository
+	hooks/	Hooks that Claude Code runs around its tools
+		build.sh	Runs qsoku build after a .rs, Cargo.toml or Cargo.lock file is changed with srwr
+		crube-untracked.sh	After srwr new creates a file, tells Claude which of its paths have no description, per language
+		require-bcuz.sh	PreToolUse hook that refuses Bash commands not run through bcuz
+		require-bcuz.test.sh	Table of the commands require-bcuz.sh allows and refuses (qsoku hook)
+	rules/	Rules for working in this repository (Japanese); CLAUDE.md says when to read each
+		bcuz-usage.md	How to run Bash commands through bcuz, and keeping secrets out of them
+		crube-usage.md	Using crube: MCP and the CLI, finding places, keeping descriptions in both languages
+		datetime.md	Dates and times: keep UTC, show in the local time zone
+		directory-structure.md	Where each file goes, the layout of the repository, and how the code is split by trust layer
+		distribution.md	How Saird is released: the command on GitHub Releases, implementation and spec versions, goreleaser and cargo-zigbuild, and the release flow
+		documentation.md	How to write documents: languages, style, how docs/ changes, example values from tools, history goes in mtqg
+		mtqg-usage.md	How to record memos, todos, questions, bugs and rules with mtqg
+		naming.md	Naming rules (to be filled in)
+		qsoku-usage.md	The qsoku names for build, test and lint, and how to call them
+		srwr-usage.md	Editing files only through srwr (strict mode), and closing tapes
+		testing.md	Test policy, and pitfalls of the sandbox and of CI on each OS
+		working-with-human.md	How to ask people: small blockers, checks, and approval of what users see
+	settings.json	Permissions, sandbox and hooks of Claude Code (managed by people)
+	skills/	Skills of Claude Code
+		commit-with-tape/	Skill: close the srwr tape and commit
+			SKILL.md	The steps of the skill
+		mutation-check/	Skill: break the code on purpose to see that the tests notice
+			SKILL.md	The steps of the skill (cargo mutants for syntactic mutations, mutants -spec for spec.txt)
+			spec.txt	Mutations that break the promises of the project one by one, in the words of the spec (empty at first)
+			mutants/	The tool that makes the mutations of spec.txt and runs the tests (a Go module of its own)
+				go.mod	Module definition, apart from this project
+				main.go	Makes the mutations of a list (and the syntactic ones of Go files) one at a time, and puts the files back
+				main_test.go	Tests of the tool
+.devcontainer/	Development container
+	devcontainer-lock.json	Versions of the features the container was built with
+	devcontainer.json	Container definition and VS Code settings
+	postCreate.sh	Installs the tools (qsoku, mtqg, srwr, bcuz, crube, goreleaser, the cargo tools, zig) after the container is made, and wires up the shells it lists (bash by default)
+.github/	GitHub settings
+	workflows/	GitHub Actions workflows
+		ci.yml	CI: qsoku check on Linux, macOS and Windows, ShellCheck and cargo-deny
+		release.yml	Release on a tag: checks Cargo.toml's version, runs ci.yml, attaches goreleaser's archives to a Release and publishes it
+.mtqg/	Process record kept with mtqg: memos, todos, questions, bugs, glossary and rules
+	.gitattributes	Merges journal.jsonl with merge=union
+	.gitignore	Keeps .local/ out of git
+	SCHEMA.md	Data format of journal.jsonl
+	journal.jsonl	The records, one JSON line each (written only through mtqg)
+	version	Version of the mtqg data format
+.srwr/	srwr: tapes of the file edits made by AI, each with its reason
+	tapes/	Closed tapes (committed); replay them with srwr view
+		| One compressed tape (*.tape.jsonl.gz) for each unit of work.
+		| The tapes are left out by .crube/ignore, so that they need no description.
+docs/	The Saird specification
+	design/	The ideas behind Saird, and its trust model
+		build-and-runtime.md	What is decided at build time and at run time
+		granularity.md	Nested boxes, approval boundaries and the permission summary
+		non-goals.md	What Saird leaves out, and what comes later
+		open-issues.md	Weaknesses and unsolved problems
+		overview.md	The central idea: trust contracts and evidence, not code
+		reuse.md	Reusing existing libraries and APIs
+		trust.md	Containment and evidence: who guarantees what, the trusted base, receipts, test validity, approval
+	examples/	Examples
+		call.md	A call from inside an implementation
+		checkout.md	An assembly: Checkout
+		reserve-stock.md	A box contract: ReserveStock
+	reference/	The rules of the language and tools
+		assembly.md	Assemblies and calls
+		contract.md	Contracts: in, out, needs and tests
+		effects.md	Effects the host guarantees: atomic and idempotent
+		errors.md	Results, faults and errors
+		generated-tests.md	Generated tests: inputs, state, verdicts, minimum hits, seed
+		glossary.md	Terms
+		permissions.md	Permissions: kv, http, the inclusion rule and secrets
+.gitattributes	Line endings (LF everywhere) and merge=union for the record files
+.gitignore	Files kept out of git; dot entries in the root are an allowlist
+.mcp.json	MCP servers for Claude Code: mtqg, srwr, and crube in English and Japanese
+.srwrignore	Files srwr does not put on its tapes
+CLAUDE.md	Rules for Claude Code in this repository, and the rule files to read
+LICENSE	MIT license
+README.md	What Saird is, its state, and how to develop it
+qsokufile	Named commands for build, test and lint (qsoku)
+.goreleaser.yaml	How the release archives are built (goreleaser)
+	| Used by .github/workflows/release.yml on a tag, and by qsoku snapshot locally. Builds the command saird (src/main.rs); the command shows Cargo.toml's version. See .claude/rules/distribution.md.
+Cargo.lock	The exact versions of the dependencies (written by cargo; committed)
+Cargo.toml	The package: its name, version, Rust version, dependencies and lint levels
+about.hbs	The template of the license texts in the release archives (cargo-about)
+about.toml	cargo-about settings: the accepted licenses and the targets of the release archives
+deny.toml	cargo-deny settings: vulnerabilities, allowed licenses, banned crates and sources
+rust-toolchain.toml	The Rust toolchain of this repository (stable, with rustfmt and clippy)
+src/	The Rust code of the Saird tools and the command saird
+	lib.rs	The library; a placeholder at first so that qsoku check has something to build

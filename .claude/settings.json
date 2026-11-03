@@ -1,0 +1,123 @@
+{
+  "env": {
+    "MTQG_AUTHOR_KIND": "ai",
+    "MTQG_AUTHOR_NAME": "claude-code"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/require-bcuz.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/build.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "mcp__srwr__edit|mcp__srwr__new"
+      },
+      {
+        "hooks": [
+          {
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/crube-untracked.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "mcp__srwr__new"
+      },
+      {
+        "matcher": "Read|Bash|Grep|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "srwr hook"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "mtqg hook claude-code session-start",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "mtqg hook claude-code stop",
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "enableWeakerNestedSandbox": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false,
+    "filesystem": {
+      "allowWrite": [
+        "/usr/local/cargo",
+        "/usr/local/rustup",
+        "~/.cache/zig",
+        "~/.cache/cargo-zigbuild",
+        "~/.cache/go-build",
+        "/go"
+      ],
+      "denyRead": ["~/.ssh", "~/.aws", "~/.config/gh"]
+    },
+    "network": {
+      "allowedDomains": [
+        "index.crates.io",
+        "static.crates.io",
+        "crates.io",
+        "static.rust-lang.org",
+        "proxy.golang.org",
+        "sum.golang.org",
+        "github.com",
+        "api.github.com"
+      ]
+    }
+  },
+  "permissions": {
+    "ask": [
+      "Bash(git reset --hard*)",
+      "Bash(git clean*)",
+      "Bash(*sudo*)",
+      "Bash(gh pr create*)"
+    ],
+    "deny": [
+      "Bash(git push*)",
+      "Bash(gh pr merge*)",
+      "Bash(gh release create*)",
+      "Edit",
+      "Write",
+      "MultiEdit",
+      "NotebookEdit"
+    ],
+    "allow": [
+      "mcp__srwr__look",
+      "mcp__srwr__edit",
+      "mcp__srwr__new",
+      "mcp__srwr__session",
+      "mcp__crube",
+      "mcp__crube-ja"
+    ]
+  },
+  "enabledMcpjsonServers": ["mtqg", "srwr", "crube", "crube-ja"]
+}

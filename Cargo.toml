@@ -1,0 +1,25 @@
+[package]
+name = "saird"
+# The released version: the tag without its "v" (v0.1.0 -> 0.1.0). release.yml
+# stops when the two differ (.claude/rules/distribution.md).
+version = "0.0.0"
+edition = "2024"
+# The oldest Rust this project builds with. rust-toolchain.toml picks the
+# toolchain that is used; raise this when the code needs a newer Rust.
+rust-version = "1.99"
+license = "MIT"
+publish = false
+
+[dependencies]
+
+# Lints for every target (qsoku lint runs clippy with -D warnings, so a warning
+# fails the check). Change a level here, not with #[allow] spread over the code;
+# an #[allow] that is needed says why (clippy::allow_attributes_without_reason).
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+allow_attributes_without_reason = "warn"
+dbg_macro = "warn"
+todo = "warn"
+unwrap_used = "warn"

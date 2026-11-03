@@ -1,0 +1,37 @@
+# Entry points for building and checking this project (.claude/rules/testing.md).
+# qsoku always runs these with sh, so every entry works the same no matter which
+# shell called it.
+
+build: (cd //; cargo build --all-targets)
+
+# Rewrite the files with rustfmt.
+fmt: (cd //; cargo fmt --all)
+
+# Also reports files that rustfmt would change. Every clippy warning fails the
+# check (the lint levels are in Cargo.toml's [lints]).
+lint: (cd //; cargo fmt --all --check && cargo clippy --all-targets --all-features -- -D warnings)
+
+# Not --all-targets: it leaves out the doctests (the examples in /// comments).
+unit: (cd //; cargo test --all-features)
+
+# Lint for the other OSes. Turn this on (remove the "# ") once the project has
+# OS-specific code (#[cfg(windows)], #[cfg(unix)]), and add "&& qsoku cross" to
+# check: a Linux-only run does not notice a broken Windows branch. The targets
+# need "rustup target add" once (rustup prints the command when one is missing).
+# cross: (cd //; rc=0; for t in x86_64-pc-windows-gnu x86_64-apple-darwin; do echo "== $t"; cargo clippy --all-targets --all-features --target "$t" -- -D warnings || rc=1; done; [ "$rc" -eq 0 ])
+
+check: qsoku lint && qsoku unit
+
+# Known vulnerabilities, licenses, banned crates and sources of the
+# dependencies (deny.toml).
+deny: (cd //; cargo deny check)
+
+shellcheck: (cd //; git ls-files '*.sh' '*.bash' | xargs -r shellcheck)
+
+# The decision table of the hook that forces commands through bcuz (needs jq).
+hook: (cd //; bash .claude/hooks/require-bcuz.test.sh)
+
+# The release archives of .goreleaser.yaml, made without a tag into dist/, to
+# look at before tagging (needs goreleaser, zig and cargo-zigbuild:
+# .claude/rules/distribution.md).
+snapshot: (cd //; goreleaser check && goreleaser release --snapshot --clean)

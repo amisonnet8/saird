@@ -1,0 +1,7 @@
+# Files srwr does not put on the tape (same format as .gitignore).
+# Defaults that are never recorded: .env, .env.*, *.pem, *.key, id_rsa*,
+# id_ed25519*, *.p12, *.pfx and anything in .srwr/.
+# .mtqg/ is read and written only through the mtqg CLI (.claude/rules/mtqg-usage.md).
+.mtqg/
+# .bcuz/ is written only by bcuz (.claude/rules/bcuz-usage.md).
+.bcuz/

@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # release.yml runs these same checks before it builds a release.
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: check (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+      # Only for qsoku, which is a Go program; the project itself is Rust.
+      - uses: actions/setup-go@v7
+        with:
+          go-version: stable
+      - name: Install qsoku
+        run: go install github.com/amisonnet8/qsoku/cmd/qsoku@latest
+      # rustup is on every runner: the first cargo command installs the
+      # toolchain of rust-toolchain.toml.
+      - name: qsoku check
+        shell: bash
+        run: qsoku check
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Only for qsoku, which is a Go program; the project itself is Rust.
+      - uses: actions/setup-go@v7
+        with:
+          go-version: stable
+      - name: Install qsoku
+        run: go install github.com/amisonnet8/qsoku/cmd/qsoku@latest
+      - name: qsoku shellcheck
+        run: qsoku shellcheck
+      # The decision table of the hook that forces commands through bcuz (jq is on the runner).
+      - name: qsoku hook
+        run: qsoku hook
+
+  deny:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Only for qsoku, which is a Go program; the project itself is Rust.
+      - uses: actions/setup-go@v7
+        with:
+          go-version: stable
+      - name: Install qsoku
+        run: go install github.com/amisonnet8/qsoku/cmd/qsoku@latest
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-deny
+      - name: qsoku deny
+        run: qsoku deny

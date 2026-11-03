@@ -1,0 +1,65 @@
+# The release archives of this project (.claude/rules/distribution.md). On a
+# tag, .github/workflows/release.yml runs this, which attaches the archives to a
+# draft Release, and then publishes the Release. Locally: qsoku snapshot.
+#
+# The command is saird (src/main.rs). Until src/main.rs exists, qsoku snapshot
+# and a release fail, as there is nothing to build. goreleaser check needs a
+# git repository with a remote.
+version: 2
+
+project_name: saird
+
+before:
+  hooks:
+    # The license texts of what is built into the command, put into every
+    # archive as licenses/: the crates (about.toml, about.hbs), and the Rust
+    # standard library's copyright notices from the toolchain.
+    - rm -rf bin/licenses
+    - mkdir -p bin/licenses
+    - cargo about generate --fail about.hbs -o bin/licenses/THIRD_PARTY_LICENSES.txt
+    - sh -c 'cp "$(rustc --print sysroot)/share/doc/rust/COPYRIGHT-library.html" bin/licenses/RUST_STD_COPYRIGHT.html'
+
+builds:
+  # cargo zigbuild (cargo-zigbuild and zig) builds every target from one Linux
+  # machine. musl on Linux: a static binary that needs no libc of the system.
+  - builder: rust
+    binary: saird
+    targets:
+      - x86_64-unknown-linux-musl
+      - aarch64-unknown-linux-musl
+      - x86_64-apple-darwin
+      - aarch64-apple-darwin
+      - x86_64-pc-windows-gnu
+      - aarch64-pc-windows-gnullvm
+    flags:
+      - --release
+      - --locked
+
+archives:
+  - formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+      # The directory itself, not a glob (a glob that matches one file only
+      # drops the parent directories).
+      - src: bin/licenses
+        dst: licenses
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-snapshot"
+
+changelog:
+  sort: asc
+
+# A draft, which release.yml publishes once everything is attached. The draft
+# left by a failed run is replaced by the next run for the tag.
+release:
+  draft: true
+  replace_existing_draft: true

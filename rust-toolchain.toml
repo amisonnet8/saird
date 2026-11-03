@@ -1,0 +1,8 @@
+# The toolchain of this repository: rustup installs it on the first cargo
+# command, in the container and on the CI runners alike. stable, not pinned,
+# like the other tools (.claude/rules/testing.md); Cargo.toml's rust-version is
+# the oldest Rust the code must build with.
+[toolchain]
+channel = "stable"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

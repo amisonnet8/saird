@@ -1,0 +1,73 @@
+name: Release
+
+# A tag pushed by a person (v0.1.0) is all a release takes
+# (.claude/rules/distribution.md): this runs the checks of ci.yml, builds the
+# archives with goreleaser (.goreleaser.yaml), attaches them to a draft Release
+# and then publishes it. A run that fails on the way leaves only the draft, which
+# the next run for the tag replaces. A tag whose Release is already published is
+# left alone, and the run fails.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  # First, before the long checks.
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # The command shows Cargo.toml's version (env!("CARGO_PKG_VERSION")), so
+      # it must be the tag without its "v" (.claude/rules/distribution.md).
+      - name: Stop if Cargo.toml's version is not the tag's
+        run: |
+          version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Cargo.toml's version is $version, but the tag is $GITHUB_REF_NAME. Set version = \"${GITHUB_REF_NAME#v}\" in Cargo.toml (and Cargo.lock), commit it and tag that commit."
+            exit 1
+          fi
+
+  checks:
+    needs: version
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    needs: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to make and publish the Release
+    steps:
+      - name: Stop if the Release of this tag is published
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft 2>/dev/null)" = false ]; then
+            echo "::error::The Release of $GITHUB_REF_NAME is already published; it is left as it is. Release a new tag."
+            exit 1
+          fi
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # goreleaser reads the earlier tags for the changelog
+      # What the builds of .goreleaser.yaml need: the targets, zig and
+      # cargo-zigbuild to build them all from this machine, and cargo-about for
+      # the license texts.
+      - name: Add the targets of the release archives
+        run: rustup target add x86_64-unknown-linux-musl aarch64-unknown-linux-musl x86_64-apple-darwin aarch64-apple-darwin x86_64-pc-windows-gnu aarch64-pc-windows-gnullvm
+      - uses: mlugg/setup-zig@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-zigbuild,cargo-about
+      - uses: goreleaser/goreleaser-action@v7
+        with:
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Last, once every file is attached: a person never sees a published
+      # Release with files missing.
+      - name: Publish the Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false

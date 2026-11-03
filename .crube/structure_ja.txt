@@ -1,0 +1,89 @@
+.bcuz/	bcuz を通して動かしたコマンドの記録（コミットする）
+	history.jsonl	1コマンド1行の JSON：いつ・なぜ・何を・終了コード
+.claude/	リポジトリで共有する Claude Code の設定
+	hooks/	Claude Code が道具の前後に動かすフック
+		build.sh	srwr で .rs・Cargo.toml・Cargo.lock を変えたあとに qsoku build を動かす
+		crube-untracked.sh	srwr の new でファイルを作ったあと、説明の無いパスを言語ごとに Claude に知らせる
+		require-bcuz.sh	bcuz を通さない Bash のコマンドを断る PreToolUse フック
+		require-bcuz.test.sh	require-bcuz.sh が通す・断るコマンドの表（qsoku hook）
+	rules/	このリポジトリで作業するときのルール（日本語）。いつ読むかは CLAUDE.md にある
+		bcuz-usage.md	Bash のコマンドを bcuz で動かす方法と、秘密をコマンドに書かないこと
+		crube-usage.md	crube の使い方：MCP と CLI、場所の探し方、両方の言語の説明の保ち方
+		datetime.md	日時の扱い：UTC で持ち、表示だけ利用者のタイムゾーンに直す
+		directory-structure.md	ファイルの置き場所、リポジトリの構成、信頼の層ごとのコードの分け方
+		distribution.md	配布の方法：コマンドを GitHub Releases で配る、実装の版と仕様の版、goreleaser と cargo-zigbuild、リリースの流れ
+		documentation.md	文書の書き方：言語、文体、docs/ の直し方、例の値は道具で求める、経緯は mtqg に書く
+		mtqg-usage.md	mtqg でメモ・todo・質問・不具合・決まり事を記録する方法
+		naming.md	命名規則（決まったら書く）
+		qsoku-usage.md	ビルド・テスト・lint の qsoku の名前と呼び方
+		srwr-usage.md	ファイルは srwr だけで変える（厳格モード）こと、テープの閉じ方
+		testing.md	テスト方針と、サンドボックス・OS ごとの CI の落とし穴
+		working-with-human.md	人間への頼み方：小さなつまずき、確認、見え方の了承
+	settings.json	Claude Code の許可・サンドボックス・フック（人間が管理する）
+	skills/	Claude Code のスキル
+		commit-with-tape/	スキル：srwr のテープを閉じてコミットする
+			SKILL.md	スキルの手順
+		mutation-check/	スキル：実装をわざと壊して、テストが気づくか確かめる
+			SKILL.md	スキルの手順（構文の変異は cargo mutants、spec.txt は mutants -spec）
+			spec.txt	プロジェクトの仕様の約束を1つずつ壊す変異の一覧（仕様の言葉で書く。最初は空）
+			mutants/	spec.txt の変異を入れてテストを回す道具（独立した Go モジュール）
+				go.mod	モジュールの定義（このプロジェクトとは別）
+				main.go	一覧の変異（と Go のファイルの構文の変異）を1つずつ入れ、ファイルを元に戻す
+				main_test.go	道具のテスト
+.devcontainer/	開発用のコンテナ
+	devcontainer-lock.json	コンテナを作ったときの feature の版
+	devcontainer.json	コンテナの定義と VS Code の設定
+	postCreate.sh	コンテナを作ったあとに道具（qsoku・mtqg・srwr・bcuz・crube・goreleaser・cargo の道具・zig）を入れ、挙げたシェル（初めは bash だけ）を配線する
+.github/	GitHub の設定
+	workflows/	GitHub Actions のワークフロー
+		ci.yml	CI：Linux・macOS・Windows での qsoku check、ShellCheck、cargo-deny
+		release.yml	タグで動くリリース。Cargo.toml の版を確かめ、ci.yml を通してから、goreleaser の配布物を Release に添付して公開する
+.mtqg/	mtqg の作業記録：メモ・todo・質問・不具合・用語・決まり事
+	.gitattributes	journal.jsonl を merge=union でマージする
+	.gitignore	.local/ を git に入れない
+	SCHEMA.md	journal.jsonl のデータ形式
+	journal.jsonl	記録そのもの。1件1行の JSON（mtqg からだけ書く）
+	version	mtqg のデータ形式の版
+.srwr/	srwr：AI によるファイル編集のテープ（操作ごとに理由つき）
+	tapes/	閉じたテープ（コミットする）。srwr view で再生できる
+		| 作業のまとまりごとに1本のテープ（圧縮済みの *.tape.jsonl.gz）。
+		| テープは .crube/ignore で crube の対象から外してあり、説明は要らない。
+docs/	Saird の仕様
+	design/	Saird の考え方と信頼モデル
+		build-and-runtime.md	ビルド時に決めることと、実行時に決めること
+		granularity.md	箱の入れ子、承認境界、権限サマリ
+		non-goals.md	入れないものと、後回しにするもの
+		open-issues.md	弱点と未解決の問題
+		overview.md	中心となる考え方：コードではなく契約と証拠を信頼する
+		reuse.md	既存のライブラリと API の再利用
+		trust.md	封じ込めと証拠：保証の分担、信頼基盤、レシート、テストの妥当性、承認
+	examples/	例
+		call.md	実装の中での呼び出し
+		checkout.md	組立書の例：Checkout
+		reserve-stock.md	箱の契約の例：ReserveStock
+	reference/	言語とツールの決まり
+		assembly.md	組立書と呼び出し
+		contract.md	契約：入力・出力・権限・テスト
+		effects.md	ホストが保証する性質：atomic と idempotent
+		errors.md	結果、fault、エラー
+		generated-tests.md	生成テスト：入力、状態、判定、最低成立件数、seed
+		glossary.md	用語集
+		permissions.md	権限：kv、http、包含の規則、秘密情報
+.gitattributes	改行（すべて LF）と、記録のファイルの merge=union
+.gitignore	git に入れないもの。ルート直下のドットで始まる名前は許可リスト方式
+.mcp.json	Claude Code に mtqg・srwr と、crube（英語・日本語）の MCP サーバーをつなぐ設定
+.srwrignore	srwr がテープに記録しないファイル
+CLAUDE.md	このリポジトリでの Claude Code のルールと、読むべきルールファイルの案内
+LICENSE	MIT ライセンス
+README.md	Saird とは何か、今の状態、開発のしかた
+qsokufile	ビルド・テスト・lint の名前つきコマンド（qsoku）
+.goreleaser.yaml	配布物の作り方（goreleaser）
+	| タグで .github/workflows/release.yml が、手元では qsoku snapshot が使う。コマンド saird（src/main.rs）を作る。コマンドが出す版は Cargo.toml の版。.claude/rules/distribution.md を参照。
+Cargo.lock	依存の版の固定（cargo が書く。コミットする）
+Cargo.toml	パッケージの定義：名前・版・Rust の版・依存・lint の水準
+about.hbs	配布物に入れるライセンス文のひな形（cargo-about）
+about.toml	cargo-about の設定：許すライセンスと、配布物のターゲット
+deny.toml	cargo-deny の設定：脆弱性・許すライセンス・禁止する crate・出どころ
+rust-toolchain.toml	このリポジトリの Rust のツールチェイン（stable。rustfmt・clippy つき）
+src/	Saird のツール群とコマンド saird の Rust のコード
+	lib.rs	ライブラリ。最初は qsoku check がビルドするもののためのプレースホルダー

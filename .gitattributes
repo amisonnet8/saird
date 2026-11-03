@@ -1,0 +1,4 @@
+* text=auto eol=lf
+# bcuz appends one line per command; keep both sides when branches merge
+# (.claude/rules/bcuz-usage.md).
+.bcuz/history.jsonl merge=union

@@ -1,0 +1,52 @@
+# cargo-deny configuration (qsoku deny, .claude/rules/testing.md).
+# Checks the dependencies in Cargo.lock: known vulnerabilities (the RustSec
+# advisory database), licenses that cannot be combined with this project's MIT
+# license, crates that are banned or pulled in twice, and where crates come from.
+
+[graph]
+# The targets of the release archives (.goreleaser.yaml): a dependency used on
+# one OS only is checked too.
+targets = [
+  "x86_64-unknown-linux-musl",
+  "aarch64-unknown-linux-musl",
+  "x86_64-apple-darwin",
+  "aarch64-apple-darwin",
+  "x86_64-pc-windows-gnu",
+  "aarch64-pc-windows-gnullvm",
+]
+all-features = true
+
+[advisories]
+# Fail on vulnerabilities, and on crates that are unmaintained or yanked.
+# An advisory that does not apply is ignored here only after deciding it
+# explicitly, with the reason next to its ID.
+yanked = "deny"
+ignore = []
+
+[licenses]
+# Only these licenses are allowed. Add one only after deciding it explicitly
+# (it must be compatible with MIT), and keep about.toml's accepted list the same.
+allow = [
+  "MIT",
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Unicode-3.0",
+  "Zlib",
+]
+confidence-threshold = 0.9
+# A license on the list that no dependency uses yet is fine (a new project has
+# no dependencies at all).
+unused-allowed-license = "allow"
+
+[bans]
+# Two versions of the same crate are reported, not failed.
+multiple-versions = "warn"
+wildcards = "deny"
+
+[sources]
+# Crates only from crates.io.
+unknown-registry = "deny"
+unknown-git = "deny"

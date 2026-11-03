@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "mtqg": {
+      "args": [
+        "mcp"
+      ],
+      "command": "mtqg",
+      "type": "stdio"
+    },
+    "srwr": {
+      "command": "srwr",
+      "args": [
+        "mcp"
+      ]
+    },
+    "crube": {
+      "command": "crube",
+      "args": [
+        "mcp",
+        "--allow-write"
+      ]
+    },
+    "crube-ja": {
+      "command": "crube",
+      "args": [
+        "mcp",
+        "--allow-write"
+      ],
+      "env": {
+        "CRUBE_LANG": "ja"
+      }
+    }
+  }
+}
