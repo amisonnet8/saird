@@ -134,7 +134,7 @@ and any each false in kv_after kv_before len matches not or true unique
 - フィールドは名前で指す(`where 1 <= qty <= 99`)。kv の値は `v` で指す。
 - `matches` は、主語を省き、`where` を付けたフィールドに掛かる。文字列全体が正規表現に一致することを表す。
 - レコード型の中では、`,` のあとに `IDENT ":"` が続けば、次のフィールドとする。
-- `path` がリストを通るときは、各要素の値の並びを表す(`unique(items.sku)`)。
+- `path` がリストを通るときは、各要素の値の並びを表す(`unique(items.sku)`)。2つ以上のリストを通る `path` は、検査器が拒否する。
 
 ### 上限
 

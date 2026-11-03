@@ -38,6 +38,6 @@
 - フィールドの名前は、`_` を `-` にする(`order_id` は `order-id`)。先頭か末尾の `_`、続いた `__`、数字で始まる語を含む名前は、検査器が拒否する。
 - 箱とエラーの名前は、大文字の前で区切って小文字にする(`ReserveStock` は `reserve-stock`)。
 - WIT の予約語になる名前には `%` を付ける(`type` は `%type`)。
-- 名前の無い record は、欄とパスから名付ける。入力のフィールド `x` の record は `in-x`、ok の record は `out-ok`、kv の値の record は `kv` とする。その中のフィールド `y` の record は、親の名前に `-y` を足す(`in-x-y`)。`list` は名前に何も足さない(`items: list<{ ... }>` の要素は `in-items`)。エラー `E` の record は `error-` に `E` の名前を足す。
+- 名前の無い record は、欄とパスから名付ける。入力のフィールド `x` の record は `in-x`、ok の record は `out-ok`、kv の値の record は `kv` とする。その中のフィールド `y` の record は、親の名前に `-y` を足す(`in-x-y`)。`list` は名前に何も足さない(`items: list<{ ... }>` の要素は `in-items`)。エラー `E` の record は `error-` に `E` の名前を足す。2つの record の名前が重なるとき(入力 `a_b: { ... }` と、入力 `a` の中の `b: { ... }` は、どちらも `in-a-b`)は、検査器が拒否する。
 
 関連:[文法](syntax.md)、[effects](effects.md)、[生成テスト](generated-tests.md)、[権限](permissions.md)。例は [ReserveStock](../examples/reserve-stock.md)。

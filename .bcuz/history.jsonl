@@ -172,3 +172,8 @@
 {"v":1,"ts":"2026-11-03T17:46:38.074Z","why":"[1-3] のコミットの前に、英語と日本語の説明の漏れとテープに無い変更を確かめる","cmd":["sh","-c","crube status --require all; echo \"en=$?\"; CRUBE_LANG=ja crube status --require all; echo \"ja=$?\"; srwr tapes check; echo \"tapes=$?\"; git config user.email"],"dir":".","exit":0,"ms":23}
 {"v":1,"ts":"2026-11-03T17:46:41.689Z","why":"[1-3] のコミットに入れるため、テープを閉じて圧縮する","cmd":["srwr","tapes","new"],"dir":".","exit":0,"ms":24}
 {"v":1,"ts":"2026-11-03T17:46:41.897Z","why":"[1-3] のコミットに入るものを確かめる","cmd":["git","status","--short","--untracked-files=all"],"dir":".","exit":0,"ms":3}
+{"v":1,"ts":"2026-11-03T17:46:44.942Z","why":"[1-3] の変更・記録・テープをコミット対象にする","cmd":["git","add",".bcuz/history.jsonl",".mtqg/journal.jsonl",".srwr/tapes",".crube/structure.txt",".crube/structure_ja.txt","crates/saird-core/src","docs/examples/reserve-stock.md","docs/reference/contract.md"],"dir":".","exit":0,"ms":12}
+{"v":1,"ts":"2026-11-03T21:52:34.405Z","why":"仕様に書き足す場所を探すため","cmd":["grep","-n","リストを通る\\|WIT との対応\\|重な\\|断る","docs/reference/syntax.md","docs/reference/contract.md"],"dir":".","exit":0,"ms":1}
+{"v":1,"ts":"2026-11-03T21:52:59.478Z","why":"仕様の追記のコミットの前に、テープに無い変更が無いか確かめる","cmd":["srwr","tapes","check"],"dir":".","exit":0,"ms":8}
+{"v":1,"ts":"2026-11-03T21:53:01.914Z","why":"仕様の追記のコミットに入れるため、テープを閉じて圧縮する","cmd":["srwr","tapes","new"],"dir":".","exit":0,"ms":12}
+{"v":1,"ts":"2026-11-03T21:53:02.117Z","why":"仕様の追記のコミットに入るものを確かめる","cmd":["git","status","--short"],"dir":".","exit":0,"ms":3}
