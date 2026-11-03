@@ -40,3 +40,10 @@
 {"v":1,"ts":"2026-11-03T07:22:43.668Z","why":"計画の記録のコミットの前に、日本語の説明の漏れを確かめる","cmd":["env","CRUBE_LANG=ja","crube","status","--require","all"],"dir":".","exit":0,"ms":4}
 {"v":1,"ts":"2026-11-03T07:22:46.579Z","why":"計画の記録のコミットに入れるため、テープを閉じて圧縮する","cmd":["srwr","tapes","new"],"dir":".","exit":0,"ms":7}
 {"v":1,"ts":"2026-11-03T07:22:46.765Z","why":"計画の記録のコミットに入るものを確かめる","cmd":["git","status","--short","--untracked-files=all"],"dir":".","exit":0,"ms":3}
+{"v":1,"ts":"2026-11-03T07:22:49.061Z","why":"計画の記録と閉じたテープをコミット対象にする","cmd":["git","add",".bcuz/history.jsonl",".mtqg/journal.jsonl",".srwr/tapes"],"dir":".","exit":0,"ms":7}
+{"v":1,"ts":"2026-11-03T07:23:58.859Z","why":"CLAUDE.md を直したことを、次のセッションが追えるよう残すため","cmd":["mtqg","m","add","CLAUDE.md の「最初に作る範囲」に、人間の回答で決まった MVP の前提を書いた（言語・WASI・ランタイム、MVP に clock read、min_hits の扱い、seed の導出）。min_hits は未決事項から外し、消さずに MVP の項へ移した（決定を CLAUDE.md からも読めるように）。seed の導出は提案の3点に無かったが、MVP だけ仕様（generated-tests.md）と違う扱いなので同じ所に書いた"],"dir":".","exit":0,"ms":3}
+{"v":1,"ts":"2026-11-03T07:25:07.122Z","why":"CLAUDE.md の修正のコミットの前に、テープに無い変更が無いか確かめる","cmd":["srwr","tapes","check"],"dir":".","exit":0,"ms":7}
+{"v":1,"ts":"2026-11-03T07:25:07.304Z","why":"CLAUDE.md の修正のコミットの前に、英語の説明の漏れを確かめる","cmd":["crube","status","--require","all"],"dir":".","exit":0,"ms":4}
+{"v":1,"ts":"2026-11-03T07:25:07.491Z","why":"CLAUDE.md の修正のコミットの前に、日本語の説明の漏れを確かめる","cmd":["env","CRUBE_LANG=ja","crube","status","--require","all"],"dir":".","exit":0,"ms":4}
+{"v":1,"ts":"2026-11-03T07:25:10.537Z","why":"CLAUDE.md の修正のコミットに入れるため、テープを閉じて圧縮する","cmd":["srwr","tapes","new"],"dir":".","exit":0,"ms":13}
+{"v":1,"ts":"2026-11-03T07:25:10.724Z","why":"CLAUDE.md の修正のコミットに入るものを確かめる","cmd":["git","status","--short","--untracked-files=all"],"dir":".","exit":0,"ms":3}
